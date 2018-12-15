@@ -1,0 +1,27 @@
+.body-background {
+    background-color: #42282C;
+}
+
+.key {
+    padding: 11px;
+    border: #f2f2f2 solid 1.5px;
+    border-radius: 50%;
+    background: rgb(136, 136, 136);
+    color: #f2f2f2;
+    width: 50px;
+    height: 50px;
+}
+
+.key-highlight {
+    background: rgb(216, 218, 145);
+    box-shadow:  rgb(229, 231, 96) 0 0 50px;
+}
+
+.offwhite-color {
+    color: #f2f2f2;
+}
+
+.row.text-center > div {
+    display: inline-block;
+    float: none;
+}
