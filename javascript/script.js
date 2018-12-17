@@ -1,6 +1,37 @@
+/* 
+* id is simply the id of the rotor,
+* alphabet is the list of letters that will substitute a base letter. 
+* cipherArr is the 2D array of letter to cipherLetter relation
+* position is the current notch / postion the rotor is at
+* turnOver is the notch / position at which this rotor causes the next rotor to rotate
+*
+*/
+class Rotor {
+    constructor(id, alphabet, position, turnOver) {
+        this.id = id;
+        this.alphabet = alphabet;
+        this.cipherArr = this.createSubstitutionCipher();
+        this.position = position;
+        this.turnOver = turnOver;
+    }
+
+    // takes an alphabet string for a rotor and creates a 2D array with a base (regular) alphabet with each letter's
+    // corresponding cipher letter, provided by the rotor's alphabet string.
+    createSubstitutionCipher(){
+        var baseAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        var cipherArr = [];
+    
+        for (i = 0; i < 26; i++) {
+            var plainLetter = baseAlphabet.charCodeAt(i);
+            var cipherLetter = this.alphabet.charCodeAt(i);
+            cipherArr.push([plainLetter,cipherLetter]);
+        }
+        return cipherArr;
+    }
+}
+
 var availableKeys = getAvailableKeys();
 var rotors = getRotors();
-
 $(document).ready(function() {
     init();
     detectKeyPress();
@@ -63,21 +94,17 @@ function rotorProcess(charNum) {
     return charNum;
 };
 
-// creates the rotors. Returns an array of rotor objects. Each rotor object contains an id,
-// and it cipher array connecting one letter to another.
+// creates the rotors.
 function getRotors() {
     var rotorIAlphabet = "EKMFLGDQVZNTOWYHXUSPAIBRCJ";
     var rotorIIAlphabet = "AJDKSIRUXBLHWTMCQGZNPYFVOE";
     var rotorIIIAlphabet = "BDFHJLCPRTXVZNYEIWGAKMUSQO";
-
-    // id is simply the id of the rotor, 
-    // cipherArr is the 2D array of letter to cipherLetter relation
-    // position is the current notch / postion the rotor is at
-    // turnOver is the notch / position at which this rotor causes the next rotor to rotate
+    
+    // array of rotor objects
     var rotors = [
-        rotorI = { id: 1, cipherArr: createRotorArray(rotorIAlphabet), position: 1, turnOver: 18 },
-        rotorII = { id: 2, cipherArr: createRotorArray(rotorIIAlphabet), position: 1, turnOver: 6 },
-        rotorIII = { id: 3, cipherArr: createRotorArray(rotorIIIAlphabet), position: 1, turnOver: 24 }
+        rotorI = new Rotor(1, rotorIAlphabet, 1, 18),
+        rotorII = new Rotor(1, rotorIIAlphabet, 1, 6),
+        rotorIII = new Rotor(1, rotorIIIAlphabet, 1, 24)
     ];
 
     return rotors;
@@ -94,18 +121,4 @@ function getCipherLetter(rotorArr, charNum) {
         }
     }
     return -1;
-}
-
-// takes an alphabet string for a rotor and creates a 2D array with a base (regular) alphabet with each letter's
-// corresponding cipher letter, provided by the rotor's alphabet string.
-function createRotorArray(rotorAlphabet){
-    var baseAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    var rotorArr = [];
-
-    for (i = 0; i < 26; i++) {
-        var plainLetter = baseAlphabet.charCodeAt(i);
-        var cipherLetter = rotorAlphabet.charCodeAt(i);
-        rotor.push([plainLetter,cipherLetter]);
-    }
-    return rotorArr;
 }
