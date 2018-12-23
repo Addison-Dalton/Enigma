@@ -5,7 +5,7 @@
 * notchPosition is the current notch / postion the rotor is at starting at 0
 * machinePosition is the current position in the machine of the rotor. i.e. is it in position 1, 2, or 3.
 * turnOver is the notch / position at which this rotor causes the next rotor to rotate
-*
+]*
 */
 class Rotor {
     constructor(id, cipherLetters, notchPosition, machinePosition, turnOver) {
@@ -40,8 +40,87 @@ class Rotor {
     }
 }
 
+class EngimaMachine {
+    constructor() {
+        this.allRotors = this.createRotors();
+        this.activeRotors = "PLACEHOLDER";
+
+    }
+
+    // creates the rotors.
+    createRotors() {
+        var rotorICipherLetters = "EKMFLGDQVZNTOWYHXUSPAIBRCJ";
+        var rotorIICipherLetters = "AJDKSIRUXBLHWTMCQGZNPYFVOE";
+        var rotorIIICipherLetters = "BDFHJLCPRTXVZNYEIWGAKMUSQO";
+        var rotorIVCipherLetters = "ESOVPZJAYQUIRHXLNFTGKDCMWB";
+        var rotorVCipherLetters = "VZBRGITYUPSDNHLXAWMJQOFECK";
+        
+        // array of rotor objects
+        // rotor: (id, cipherLetters, notchPosition, machinePosition, turnOverCharNum)
+        var rotors = [
+            new Rotor(1, rotorICipherLetters, 0, 1, 17),
+            new Rotor(2, rotorIICipherLetters, 0, 2, 5),
+            new Rotor(3, rotorIIICipherLetters, 0, 3, 23),
+            new Rotor(4, rotorIVCipherLetters, 0, 0, 10),
+            new Rotor(5, rotorVCipherLetters, 0, 0, 26)
+        ];
+
+        return rotors;
+    }
+
+    cipherProcess(charNum) {
+        // controls the rotors. Gets the active rotors, passes through the plaintext letter through each rotor
+        // and advances the rotors. Returns the ciphertext letter after passing through all rotors.
+        self.getCipherLetter = this.getCipherLetter
+        var rotors = this.allRotors;
+
+        // TODO: use this.activeRotors array here when implemented
+        this.allRotors.forEach(function(rotor) {
+            charNum = self.getCipherLetter(rotor.cipherArr, charNum);
+            switch (rotor.machinePosition) {
+                case 1:
+                    rotor.rotote();
+                    break;
+                case 2:
+                    var rotorI = rotors[0];
+                    if (rotorI.notchPosition == rotorI.turnOver) {
+                        rotor.rotote();
+                    }
+                    break;
+                case 3:
+                    var rotorII = rotors[1];
+                    if (rotorII.notchPosition == rotorII.turnOver) {
+                        rotor.rotote();
+                    }
+                    break;
+                default:
+                    rotor.rotote();
+            }
+        });
+
+        return charNum;
+    }
+
+    // takes the passed rotor's cipher array and passed letter to be processed.
+    // loops through the array until it finds the passed letter and the returns that letter's
+    // cipher letter
+    getCipherLetter(rotorArr, charNum) {
+        for (i = 0; i < rotorArr.length; i++) {
+            var charArr = rotorArr[i];
+            if (charNum === charArr[0]) {
+                return charArr[1];
+            }
+        }
+        return -1;
+    }
+
+    getActiveRotors() {
+        
+    }
+}
+
 var availableKeys = getAvailableKeys();
-var rotors = getRotors();
+let engimaMachine;
 $(document).ready(function() {
     init();
     detectKeyPress();
@@ -49,7 +128,7 @@ $(document).ready(function() {
 
 // run at start of webpage
 function init(){
-    
+    engimaMachine = new EngimaMachine();
 };
 
 // returns array containing the ascii codes for a-z.
@@ -71,7 +150,7 @@ function detectKeyPress() {
     $(document).keydown(function(key) {
         pressedKeyNum = key.which;
         if (availableKeys.includes(pressedKeyNum)) {
-            cipherKeyNum = rotorProcess(pressedKeyNum);
+            cipherKeyNum = engimaMachine.cipherProcess(pressedKeyNum);
             var keyLetter = String.fromCharCode(cipherKeyNum);
             $('#key-' + keyLetter).addClass('key-highlight');
         }
@@ -95,7 +174,7 @@ function detectKeyPress() {
 
 // controls the rotors. Gets the active rotors, passes through the plaintext letter through each rotor
 // and advances the rotors. Returns the ciphertext letter after passing through all rotors.
-function rotorProcess(charNum) {
+/* function rotorProcess(charNum) {
     // var activeRotors = getActiveRotors(); returns array of active rotors
     rotors.forEach(function(rotor) {
         charNum = getCipherLetter(rotor.cipherArr, charNum);
@@ -121,10 +200,10 @@ function rotorProcess(charNum) {
     });
 
     return charNum;
-};
+}; */
 
 // creates the rotors.
-function getRotors() {
+/* function getRotors() {
     var rotorICipherLetters = "EKMFLGDQVZNTOWYHXUSPAIBRCJ";
     var rotorIICipherLetters = "AJDKSIRUXBLHWTMCQGZNPYFVOE";
     var rotorIIICipherLetters = "BDFHJLCPRTXVZNYEIWGAKMUSQO";
@@ -138,12 +217,12 @@ function getRotors() {
     ];
 
     return rotors;
-}
+} */
 
 // takes the passed rotor's cipher array and passed letter to be processed.
 // loops through the array until it finds the passed letter and the returns that letter's
 // cipher letter
-function getCipherLetter(rotorArr, charNum) {
+/* function getCipherLetter(rotorArr, charNum) {
     for (i = 0; i < rotorArr.length; i++) {
         var charArr = rotorArr[i];
         if (charNum === charArr[0]) {
@@ -151,4 +230,4 @@ function getCipherLetter(rotorArr, charNum) {
         }
     }
     return -1;
-}
+} */
